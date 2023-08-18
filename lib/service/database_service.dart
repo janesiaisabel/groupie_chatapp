@@ -33,6 +33,7 @@ class DatabaseService {
     return userCollection.doc(uid).snapshots();
   }
 
+  //creating group
   Future createGroup(String userName, String id, String groupName) async {
     DocumentReference groupDocumentReference = await groupCollection.add({
       "groupName": groupName,
@@ -54,5 +55,26 @@ class DatabaseService {
       "groups":
           FieldValue.arrayUnion(["${groupDocumentReference.id}_$groupName"])
     });
+  }
+
+  //getting chat
+  getChats(String groupId) async {
+    return groupCollection
+        .doc(groupId)
+        .collection("messages")
+        .orderBy("time")
+        .snapshots();
+  }
+
+  //get group admin
+  Future getGroupAdmin(String groupId) async {
+    DocumentReference d = groupCollection.doc(groupId);
+    DocumentSnapshot documentSnapshot = await d.get();
+    return documentSnapshot["admin"];
+  }
+
+  //get group members
+  getGroupMembers(groupId) async {
+    return groupCollection.doc(groupId).snapshots();
   }
 }

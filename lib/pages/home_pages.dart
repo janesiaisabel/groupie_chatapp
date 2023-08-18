@@ -191,7 +191,6 @@ class _HomePageState extends State<HomePage> {
 
   popUpDialog(BuildContext context) {
     showDialog(
-        barrierDismissible: false,
         context: context,
         builder: (context) {
           return AlertDialog(
