@@ -64,7 +64,7 @@ class _ChatPageState extends State<ChatPage> {
                   },
                   icon: Icon(Icons.info))
             ]),
-        body: Stack(
+        body: Column(
           children: [
             chatMessages(),
             Container(
@@ -115,22 +115,26 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   chatMessages() {
-    return StreamBuilder(
-        stream: chats,
-        builder: (context, snapshot) {
-          return snapshot.hasData
-              ? ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    return MessageTile(
-                        message: snapshot.data!.docs[index]["message"],
-                        sender: snapshot.data!.docs[index]["sender"],
-                        sentByMe: widget.userName ==
-                            snapshot.data!.docs[index]["sender"]);
-                  })
-              : Container();
-        });
+    return Expanded(
+      child: StreamBuilder(
+          stream: chats,
+          builder: (context, snapshot) {
+            return snapshot.hasData
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    reverse: true,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      return MessageTile(
+                          message: snapshot.data!.docs[index]["message"],
+                          sender: snapshot.data!.docs[index]["sender"],
+                          sentByMe: widget.userName ==
+                              snapshot.data!.docs[index]["sender"]);
+                    })
+                : Container();
+          }),
+    );
   }
 
   sendMessage() {
